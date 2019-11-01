@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1572552656 source:c:\users\lucas\desktop\controle-de-estoque-em-c\main.c
+	<stdio.h>
+	<stdlib.h>
+
