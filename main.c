@@ -11,6 +11,7 @@ int signUp(){
 }
 
 int main(){
-
+    char email[6] = "lucas";
+    getPost(email);
     return 0;
 }
