@@ -14,6 +14,7 @@ struct POST {
 #include <string.h>
 #include <stddef.h>
 #include <locale.h>
+#include <conio.h>
 #include "post.h"
 #include "validation.h"
 #include "user.h"

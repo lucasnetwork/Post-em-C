@@ -1,13 +1,12 @@
 #include "./includes/index.h"
 int main(){
     setlocale(LC_ALL,"portuguese");
-    char email[6];
     int password,Login,task;
     char emailLog[SIZE];
 	char passwordLog[SIZE];
     //0 para login em email, e 1 para se registrar;
     for(;;){
-        system("cls");
+        getPosts();
         printf("Ja possui login?\nSim(0)\nNao(1)\nexit()\n");
         while(!scanf("%i",&Login)){
             if(isNumber(Login)==0){
@@ -23,22 +22,25 @@ int main(){
                 printf("digite sua senha:");
                 scanf("%s",&passwordLog);
                 if(getLogin(emailLog,passwordLog)==0){
-                    printf("Criar ou visualizar posts?\nCriar(0)\nVisualizar(1)\nExit(2)");
+                    printf("Criar ou visualizar posts?\nCriar(0)\nVisualizar(1)\nDeletar usuario(2)\nExit(3)\n");
                     scanf("%i",&task);
                     switch (task){
                     case 0:
-                        printf("criar post");
+                        createPost(emailLog);
                         break;
                     case 1:
-                        getPost(email);
-                        system("pause");
+                        getPostsUser(emailLog);
+                        getch();
                         break;
                     case 2:
+                        deleteUser(emailLog);
+                        break;
+                    case 3:
                         break;
                     }
                 }else{
                     printf("Email ou senha incorretos,tente novamente\n");
-                    system("pause");
+                    getch();
                 }
                 break;
             case 1:
@@ -46,6 +48,7 @@ int main(){
                 break;
             case 2:
                 return 0;
+            
         }
     }
 }

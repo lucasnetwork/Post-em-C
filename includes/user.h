@@ -11,7 +11,7 @@ int getRegister(){
 		scanf("%s",userLog.email);
 		printf("digite sua senha:");
 		scanf("%s",userLog.password);
-		if(userExist(userLog.email,a)==1){
+		if(userExist(userLog.email,a)==0){
 			printf("email já existe\n");
 			system("pause");
 		}else{
@@ -32,4 +32,20 @@ int getLogin(char* emailLog, char* passwordLog){
 	}
 	system("cls");
 	return 1;
+}
+int deleteUser(char* email){
+	struct USER post;
+	FILE *postFile;
+	FILE *postFileAux;
+	postFile = fopen("users.txt","a+");
+	postFileAux = fopen("usersaux.txt","a+");
+	while(fread(&post,sizeof(post),1,postFile)!=0){
+            if(strcmp(email,post.email)!= 0){
+				fwrite(&post,sizeof(post),1,postFileAux);
+            }
+	}	
+	fclose(postFile);
+	fclose(postFileAux);
+	remove("users.txt");
+	rename("usersaux.txt","users.txt");
 }
