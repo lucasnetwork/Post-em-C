@@ -2,8 +2,8 @@
 int main(){
     setlocale(LC_ALL,"");
     int password,Login,task;
-    char emailLog[SIZE];
-	char passwordLog[SIZE];
+    char emailLog[50];
+	char passwordLog[16];
     //0 para login em email, e 1 para se registrar;
     for(;;){
         system("cls");
@@ -17,7 +17,7 @@ int main(){
             }
         };
         system("cls");
-        //login do usuario
+        //login of user
         switch (Login){
             case 0:
                 printf(" Digite seu email:");
@@ -56,7 +56,7 @@ int main(){
                     
                     }
                 }else{
-                    printf("Email ou senha incorretos,tente novamente\n");
+                    printf("%s",LOGIN_ERROR);
                     getch();
                 }
                 break;

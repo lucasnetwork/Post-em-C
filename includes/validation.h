@@ -1,7 +1,7 @@
 int postUserExists(char* email,int id){
     struct POST post;
 	FILE *postFile;
-	postFile = fopen("posts.txt","a+");
+	postFile = fopen(POSTS_FILE,"a+");
 	system("cls");
 	while(fread(&post,sizeof(post),1,postFile)){
 		if(strcmp(email,post.email)==0 && id == post.id){
@@ -20,7 +20,7 @@ int isNumber(int number){
 }
 int userExist(char* email, char* password){
     FILE *usersFile;
-    usersFile = fopen("users.txt","a+");
+    usersFile = fopen(USERS_FILE,"a+");
     struct USER user;
     while(fread(&user,sizeof(user),1,usersFile)!=0){
         if(strcmp(password,"")==0){
@@ -44,7 +44,7 @@ int checkPostId(char* email){
 	id = 0;
 	struct POST post;
 	FILE *postFile;
-	postFile = fopen("posts.txt","a+");
+	postFile = fopen(POSTS_FILE,"a+");
 	while(fread(&post,sizeof(post),1,postFile)!=0){
             if(strcmp(email,post.email)== 0 && id == post.id){
                 id++;

@@ -1,22 +1,41 @@
 int getRegister(){
-	int moreAddUsers;
+	int moreAddUsers,lenghtOverflow;
 	char nullPassword[1] = ""; 
 	moreAddUsers = 0;
+	lenghtOverflow= 1;
 	while(moreAddUsers == 0){
 		moreAddUsers = 0;
 		FILE *usersFile;
-		usersFile = fopen("users.txt","a+");
+		usersFile = fopen(USERS_FILE,"a+");
 		struct USER userLog;
 		printf("digite seu email:");
-		scanf("%s",userLog.email);
+		while(lenghtOverflow== 1){
+			scanf("%s",userLog.email);
+			if(strlen(userLog.email)>50){
+				printf("%s",USER_EMAIL_LENGHT_ERROR);
+				lenghtOverflow= 1;
+			}else{
+				lenghtOverflow=0;
+			}
+		}
 		printf("digite sua senha:");
-		scanf("%s",userLog.password);
+		lenghtOverflow = 1;
+		while(lenghtOverflow== 1){
+			scanf("%s",userLog.password);
+			if(strlen(userLog.email)>16){
+				printf("%s",USER_PASSWORD_LENGHT_ERROR);
+				lenghtOverflow= 1;
+			}else{
+				lenghtOverflow=0;
+			}
+		}
+		
 		if(userExist(userLog.email,nullPassword)==0){
-			printf("email já existe\n");
+			printf("%s",REGISTER_EMAIL_ERROR);
 			system("pause");
 		}else{
 			fwrite(&userLog,sizeof(userLog),1,usersFile);
-			printf("Cadastro feito com sucesso\n");
+			printf("%S",REGISTER_USER_SUCCESS);
 			system("pause");
 		}
 		fclose(usersFile);
@@ -37,7 +56,7 @@ int deleteUser(char* email){
 	struct USER user;
 	FILE *usersFile;
 	FILE *usersFileAux;
-	usersFile = fopen("users.txt","a+");
+	usersFile = fopen(USERS_FILE,"a+");
 	usersFileAux = fopen("usersaux.txt","a+");
 	while(fread(&user,sizeof(user),1,usersFile)!=0){
             if(strcmp(email,user.email)!= 0){
@@ -46,8 +65,8 @@ int deleteUser(char* email){
 	}	
 	fclose(usersFile);
 	fclose(usersFileAux);
-	remove("users.txt");
-	rename("usersaux.txt","users.txt");
+	remove(USERS_FILE);
+	rename("usersaux.txt",USERS_FILE);
 	return 0;
 }
 int editUser(char* email){
@@ -55,7 +74,7 @@ int editUser(char* email){
 	struct USER userAux;
 	FILE *usersFile; 
 	FILE *usersFileAux;
-	usersFile = fopen("users.txt","a+");
+	usersFile = fopen(USERS_FILE,"a+");
 	usersFileAux = fopen("usersaux.txt","a+");
 	while(fread(&user,sizeof(user),1,usersFile)!=0){
 		printf("%i",strcmp(email,user.email));
@@ -67,7 +86,7 @@ int editUser(char* email){
 			scanf("%s",&user.password);
 			system("cls");
 			if(userExist(user.email,"")==0){
-				printf("email ja existe");
+				printf("%S",REGISTER_EMAIL_ERROR);
 				fwrite(&user,sizeof(user),1,usersFileAux);
 				getch();
 			}else{
@@ -79,6 +98,6 @@ int editUser(char* email){
 	}
 	fclose(usersFile);
 	fclose(usersFileAux);
-	remove("users.txt");
-	rename("usersaux.txt","users.txt");
+	remove(USERS_FILE);
+	rename("usersaux.txt",USERS_FILE);
 }
