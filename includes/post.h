@@ -8,9 +8,11 @@ int createPost(char* email){
 	while(moreAddPosts ==0){
 		postFile = fopen(POSTS_FILE,"a+");
 		lenghtOverflow=1;
-		printf("Escreva seu post: ");
 		while(lenghtOverflow== 1){
-			scanf("%s",&post.postContent);
+			printf("Escreva seu post: ");
+			setbuf(stdin,NULL);
+			scanf("%[^\n]s",&post.postContent);
+			setbuf(stdin,NULL);
 			if(strlen(post.postContent)>1000){
 				printf("%s",POST_LENGHT_ERROR);
 				lenghtOverflow= 1;
@@ -58,6 +60,7 @@ int deletePost(char* email, int id){
 }
 int editPost(char* email,int id){
 	if(postUserExists(email,id)==0){
+		int lenghtOverflow = 1;
 		struct POST post;
 		struct POST postAux;
 		FILE *postFile;
@@ -66,9 +69,20 @@ int editPost(char* email,int id){
 		postFileAux = fopen("postsaux.txt","a+");
 		while(fread(&post,sizeof(post),1,postFile)!=0){
 			if(strcmp(email,post.email)== 0 && id==post.id){
-				printf("Digite o novo conteudo:\n");
-				scanf("%s",&post.postContent);
-				fwrite(&post,sizeof(post),1,postFileAux);
+				while(lenghtOverflow == 1){
+					printf("Digite o novo conteudo:\n");
+					setbuf(stdin,NULL);
+					scanf("%[^\n]s",&post.postContent);
+					setbuf(stdin,NULL);
+					if(strlen(post.postContent)>1000){
+						printf("%s",POST_LENGHT_ERROR);
+						getch();
+						lenghtOverflow = 1;
+					}else{
+						lenghtOverflow = 0;
+					}
+				}
+					fwrite(&post,sizeof(post),1,postFileAux);
 			}else{
 				fwrite(&post,sizeof(post),1,postFileAux);
 			}
