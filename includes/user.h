@@ -34,18 +34,51 @@ int getLogin(char* emailLog, char* passwordLog){
 	return 1;
 }
 int deleteUser(char* email){
-	struct USER post;
-	FILE *postFile;
-	FILE *postFileAux;
-	postFile = fopen("users.txt","a+");
-	postFileAux = fopen("usersaux.txt","a+");
-	while(fread(&post,sizeof(post),1,postFile)!=0){
-            if(strcmp(email,post.email)!= 0){
-				fwrite(&post,sizeof(post),1,postFileAux);
+	struct USER user;
+	FILE *usersFile;
+	FILE *usersFileAux;
+	usersFile = fopen("users.txt","a+");
+	usersFileAux = fopen("usersaux.txt","a+");
+	while(fread(&user,sizeof(user),1,usersFile)!=0){
+            if(strcmp(email,user.email)!= 0){
+				fwrite(&user,sizeof(user),1,usersFileAux);
             }
 	}	
-	fclose(postFile);
-	fclose(postFileAux);
+	fclose(usersFile);
+	fclose(usersFileAux);
+	remove("users.txt");
+	rename("usersaux.txt","users.txt");
+	return 0;
+}
+int editUser(char* email){
+	struct USER user;
+	struct USER userAux;
+	FILE *usersFile; 
+	FILE *usersFileAux;
+	usersFile = fopen("users.txt","a+");
+	usersFileAux = fopen("usersaux.txt","a+");
+	while(fread(&user,sizeof(user),1,usersFile)!=0){
+		printf("%i",strcmp(email,user.email));
+		getch();
+		if(strcmp(email,user.email)==0){
+			printf("Digite o novo email:");
+			scanf("%s",&user.email);
+			printf("Digite a nova senha:");
+			scanf("%s",&user.password);
+			system("cls");
+			if(userExist(user.email,"")==0){
+				printf("email ja existe");
+				fwrite(&user,sizeof(user),1,usersFileAux);
+				getch();
+			}else{
+				fwrite(&user,sizeof(user),1,usersFileAux);
+			}
+		}else{
+			fwrite(&user,sizeof(user),1,usersFileAux);
+		}
+	}
+	fclose(usersFile);
+	fclose(usersFileAux);
 	remove("users.txt");
 	rename("usersaux.txt","users.txt");
 }
