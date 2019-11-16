@@ -1,9 +1,15 @@
+/*
+	This file is used for to include libraries and global variables 
+*/
 #define SIZE 50
+/*
+	Theses structs will are used for all the actions 
+	of program
+*/
 struct USER {
 	char email[SIZE];
 	char password[SIZE];
 };
-
 struct POST {
 	int id;
 	char email[SIZE];
