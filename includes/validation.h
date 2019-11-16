@@ -12,14 +12,12 @@ int postUserExists(char* email,int id){
 	fclose(postFile);
 	return 1;
 }
-
 int isNumber(int number){
     while(getchar()!='\n'){
         return 0;
     }
     return 1;
 }
-
 int userExist(char* email, char* password){
     FILE *usersFile;
     usersFile = fopen("users.txt","a+");

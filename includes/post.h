@@ -1,21 +1,21 @@
 int createPost(char* email){
 	struct POST post;
-	int continuar,a;
-	a= 1;
+	int moreAddPosts,lenghtOverflow;
+	lenghtOverflow= 1;
 	strcat(post.email,email);
-	continuar = 0;
+	moreAddPosts = 0;
 	FILE *postFile;
-	while(continuar ==0){
+	while(moreAddPosts ==0){
 		postFile = fopen("posts.txt","a+");
-		a=1;
+		lenghtOverflow=1;
 		printf("Escreva seu post: ");
-		while(a== 1){
+		while(lenghtOverflow== 1){
 			scanf("%s",&post.postContent);
 			if(strlen(post.postContent)>1000){
 				printf("post muito grande\n");
-				a= 1;
+				lenghtOverflow= 1;
 			}else{
-				a=0;
+				lenghtOverflow=0;
 			}
 		}
 		post.id = checkPostId(email);
@@ -25,30 +25,36 @@ int createPost(char* email){
 		fclose(postFile);
 		system("cls");
 		printf("Deseja continuar?\n");
-		scanf("%i",&continuar);
+		scanf("%i",&moreAddPosts);
 	}
 	return 0;
 }
 int deletePost(char* email, int id){
-	struct POST post;
-	FILE *postFile;
-	FILE *postFileAux;
-	postFile = fopen("posts.txt","a+");
-	postFileAux = fopen("postsaux.txt","a+");
-	system("cls");
-	while(fread(&post,sizeof(post),1,postFile)){
-		if(strcmp(email,post.email)!=0){
-			fwrite(&post,sizeof(post),1,postFileAux);
+	if(postUserExists(email,id)==0){
+		struct POST post;
+		FILE *postFile;
+		FILE *postFileAux;
+		postFile = fopen("posts.txt","a+");
+		postFileAux = fopen("postsaux.txt","a+");
+		system("cls");
+		while(fread(&post,sizeof(post),1,postFile)){
+			if(strcmp(email,post.email)!=0){
+				fwrite(&post,sizeof(post),1,postFileAux);
+			}
+			if(strcmp(email,post.email)== 0 && id != post.id){
+				fwrite(&post,sizeof(post),1,postFileAux);
+			}
 		}
-		if(strcmp(email,post.email)== 0 && id != post.id){
-			fwrite(&post,sizeof(post),1,postFileAux);
-		}
+		fclose(postFile);
+		fclose(postFileAux);
+		remove("posts.txt");
+		rename("postsaux.txt","posts.txt");
+		return 0;
+	}else{
+		printf("post nao existe");
+		getch();
+		return 1;
 	}
-	fclose(postFile);
-	fclose(postFileAux);
-	remove("posts.txt");
-	rename("postsaux.txt","posts.txt");
-	return 0;
 }
 int editPost(char* email,int id){
 	if(postUserExists(email,id)==0){
@@ -74,6 +80,7 @@ int editPost(char* email,int id){
 	}else{
 		printf("post nao existe");
 		getch();
+		return 1;
 	}
 }
 int getPostsUser(char* email){
