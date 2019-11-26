@@ -8,3 +8,4 @@
 #define GET_POST_ERROR "post nao existe\n"
 #define USERS_FILE "users.txt"
 #define POSTS_FILE "posts.txt"
+#define USER_PASSWORD_LENGHT_SMALL_ERROR "Senha muito fraca"

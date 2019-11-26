@@ -6,6 +6,7 @@ int createPost(char* email){
 	moreAddPosts = 0;
 	FILE *postFile;
 	while(moreAddPosts ==0){
+		system("cls");
 		postFile = fopen(POSTS_FILE,"a+");
 		lenghtOverflow=1;
 		while(lenghtOverflow== 1){
@@ -26,7 +27,7 @@ int createPost(char* email){
 		getch();
 		fclose(postFile);
 		system("cls");
-		printf("Deseja continuar?\n");
+		printf("Deseja criar mais um post?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddPosts);
 	}
 	return 0;
@@ -110,7 +111,7 @@ int getPostsUser(char* email){
 				printf("  %s\n\n",post.postContent);
             }
 	}
-	printf("\n Deseja fazer alguma ação?\nDeletar(0)\nEditar(1)\nSair(3)");
+	printf("\n Deseja fazer alguma acao?\nDeletar(0)\nEditar(1)\nSair(3)");
 	scanf("%i",&action);
 	fclose(postFile);
 	switch (action){
@@ -139,5 +140,23 @@ int getPosts(){
 		printf("     %s\n\n",post.postContent);
 	}	
 	fclose(postFile);
+	return 0;
+}
+int deletePostsUser(char* email){
+	struct POST post;
+	FILE *postFile;
+	FILE *postFileAux;
+	postFile = fopen(POSTS_FILE,"a+");
+	postFileAux = fopen("postsaux.txt","a+");
+	system("cls");
+	while(fread(&post,sizeof(post),1,postFile)){
+		if(strcmp(email,post.email)!=0){
+			fwrite(&post,sizeof(post),1,postFileAux);
+		}
+	}
+	fclose(postFile);
+	fclose(postFileAux);
+	remove(POSTS_FILE);
+	rename("postsaux.txt",POSTS_FILE);
 	return 0;
 }

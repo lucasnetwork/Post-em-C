@@ -10,7 +10,7 @@ int login(){
     printf(" Digite sua senha:");
     scanf("%s",&passwordLog);
     system("cls");
-    if(getLogin(emailLog,passwordLog)==0){
+    if(userExist(emailLog,passwordLog)==0){
         while(task !=3){
             system("cls");
             printf(" Criar ou visualizar posts?\n\nCriar(0)\nVisualizar(1)\nEditar Usuario(2)\nDeletar usuario(3)\nExit(4)\n");
@@ -49,18 +49,12 @@ int login(){
 int main(){
     setlocale(LC_ALL,"");
     int password,Login;
-    
     //0 para login em email, e 1 para se registrar;
     for(;;){
         system("cls");
         getPosts();
         printf(" Ja possui login?\nSim(0)\nNao(1)\nexit(2)\n");
-        while(!scanf("%i",&Login)){
-            if(isNumber(Login)==0){
-                system("cls");
-                printf("Por favor, digite um numero");
-            }
-        };
+        scanf("%i",&Login);
         system("cls");
         //login of user
         switch (Login){

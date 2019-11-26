@@ -2,8 +2,9 @@ int getRegister(){
 	int moreAddUsers,lenghtOverflow;
 	char nullPassword[1] = ""; 
 	moreAddUsers = 0;
-	lenghtOverflow= 1;
 	while(moreAddUsers == 0){
+		system("cls");
+		lenghtOverflow= 1;
 		moreAddUsers = 0;
 		FILE *usersFile;
 		usersFile = fopen(USERS_FILE,"a+");
@@ -18,14 +19,18 @@ int getRegister(){
 				lenghtOverflow=0;
 			}
 		}
-		printf("digite sua senha:");
 		lenghtOverflow = 1;
 		while(lenghtOverflow== 1){
+			system("cls");
+			printf("digite sua senha:");
 			scanf("%s",userLog.password);
-			if(strlen(userLog.email)>16){
+			if(strlen(userLog.password)>16){
 				printf("%s",USER_PASSWORD_LENGHT_ERROR);
 				lenghtOverflow= 1;
-			}else{
+			}else if(strlen(userLog.password) < 8){
+				printf("%s",USER_PASSWORD_LENGHT_SMALL_ERROR);
+			}
+			else{
 				lenghtOverflow=0;
 			}
 		}
@@ -35,22 +40,16 @@ int getRegister(){
 			system("pause");
 		}else{
 			fwrite(&userLog,sizeof(userLog),1,usersFile);
-			printf("%S",REGISTER_USER_SUCCESS);
+			printf("%s",REGISTER_USER_SUCCESS);
 			system("pause");
 		}
+		
 		fclose(usersFile);
 		system("cls");
 		printf("deseja criar outro contato?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddUsers);
 	}
 	return 0;
-}
-int getLogin(char* emailLog, char* passwordLog){
-	if(userExist(emailLog,passwordLog)==0){
-		return 0;
-	}
-	system("cls");
-	return 1;
 }
 int deleteUser(char* email){
 	struct USER user;
@@ -61,7 +60,10 @@ int deleteUser(char* email){
 	while(fread(&user,sizeof(user),1,usersFile)!=0){
             if(strcmp(email,user.email)!= 0){
 				fwrite(&user,sizeof(user),1,usersFileAux);
-            }
+            }else if(strcmp(email,user.email)==0){
+				deletePostsUser(email);
+			}
+			
 	}	
 	fclose(usersFile);
 	fclose(usersFileAux);

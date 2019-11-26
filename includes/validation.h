@@ -12,16 +12,11 @@ int postUserExists(char* email,int id){
 	fclose(postFile);
 	return 1;
 }
-int isNumber(int number){
-    while(getchar()!='\n'){
-        return 0;
-    }
-    return 1;
-}
 int userExist(char* email, char* password){
     FILE *usersFile;
     usersFile = fopen(USERS_FILE,"a+");
     struct USER user;
+        
     while(fread(&user,sizeof(user),1,usersFile)!=0){
         if(strcmp(password,"")==0){
             if(strcmp(email,user.email)== 0){
