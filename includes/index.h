@@ -6,6 +6,9 @@
 	Theses structs will are used for all the actions 
 	of program
 */
+#include <stdio.h>
+#include <stdlib.h>
+
 struct USER {
 	char email[50];
 	char password[16];
@@ -15,8 +18,14 @@ struct POST {
 	char email[50];
 	char postContent[1000];
 };
-#include <stdio.h>
-#include <stdlib.h>
+struct POST *posts;
+struct USER *users;
+    
+int POSITION = 0;
+int POSITION_POST = 0;
+int sizeUser = 1;
+int sizePost = 10;
+
 #include <string.h>
 #include <stddef.h>
 #include <locale.h>

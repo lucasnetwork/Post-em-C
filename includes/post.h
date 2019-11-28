@@ -1,31 +1,36 @@
 int createPost(char* email){
-	struct POST post;
+	struct POST postLog;
 	int moreAddPosts,lenghtOverflow;
+	int i,b;
+	b=0;
 	lenghtOverflow= 1;
-	strcat(post.email,email);
 	moreAddPosts = 0;
-	FILE *postFile;
+
+	strcat(postLog.email,email);
 	while(moreAddPosts ==0){
 		system("cls");
-		postFile = fopen(POSTS_FILE,"a+");
 		lenghtOverflow=1;
 		while(lenghtOverflow== 1){
 			printf("Escreva seu post: ");
 			setbuf(stdin,NULL);
-			scanf("%[^\n]s",&post.postContent);
+			scanf("%[^\n]s",&postLog.postContent);
 			setbuf(stdin,NULL);
-			if(strlen(post.postContent)>1000){
+			if(strlen(postLog.postContent)>1000){
 				printf("%s",POST_LENGHT_ERROR);
 				lenghtOverflow= 1;
 			}else{
 				lenghtOverflow=0;
 			}
 		}
-		post.id = checkPostId(email);
-		fwrite(&post,1,sizeof(post),postFile);	
-		printf("%s",REGISTER_POST_SUCCESS);
-		getch();
-		fclose(postFile);
+		postLog.id = checkPostId(email);
+			if(POSITION_POST >= sizePost-1){
+				sizePost = sizePost*2;
+				posts = (struct POST *)realloc(posts,sizePost*sizeof(struct POST));
+			}
+			posts[POSITION] = postLog;
+			printf("%s",REGISTER_POST_SUCCESS);
+			system("pause");
+			POSITION++;
 		system("cls");
 		printf("Deseja criar mais um post?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddPosts);
@@ -33,25 +38,23 @@ int createPost(char* email){
 	return 0;
 }
 int deletePost(char* email, int id){
+	int i,j;
+	j=0;
 	if(postUserExists(email,id)==0){
-		struct POST post;
-		FILE *postFile;
-		FILE *postFileAux;
-		postFile = fopen(POSTS_FILE,"a+");
-		postFileAux = fopen("postsaux.txt","a+");
+		struct POST *newPosts;
+		newPosts = (struct POST *)malloc(POSITION_POST*sizeof(struct POST));
 		system("cls");
-		while(fread(&post,sizeof(post),1,postFile)){
-			if(strcmp(email,post.email)!=0){
-				fwrite(&post,sizeof(post),1,postFileAux);
+		for(i=0;i<=POSITION_POST;i++){
+			if(strcmp(email,posts[i].email)!=0){
+				newPosts[j] = posts[i];
+				j++;
 			}
-			if(strcmp(email,post.email)== 0 && id != post.id){
-				fwrite(&post,sizeof(post),1,postFileAux);
+			if(strcmp(email,posts[i].email)== 0 && id != posts[i].id){
+				newPosts[j] = posts[i];
+				j++;
 			}
 		}
-		fclose(postFile);
-		fclose(postFileAux);
-		remove(POSTS_FILE);
-		rename("postsaux.txt",POSTS_FILE);
+		posts = newPosts;
 		return 0;
 	}else{
 		printf("%s",GET_POST_ERROR);
@@ -60,22 +63,21 @@ int deletePost(char* email, int id){
 	}
 }
 int editPost(char* email,int id){
+	int i;
 	if(postUserExists(email,id)==0){
 		int lenghtOverflow = 1;
-		struct POST post;
-		struct POST postAux;
-		FILE *postFile;
-		FILE * postFileAux;
-		postFile = fopen(POSTS_FILE,"a+");
-		postFileAux = fopen("postsaux.txt","a+");
-		while(fread(&post,sizeof(post),1,postFile)!=0){
-			if(strcmp(email,post.email)== 0 && id==post.id){
+		struct POST *newPosts;
+		newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
+		for(i=0;i<=POSITION_POST;i++){
+			if(strcmp(email,posts[i].email)== 0 && id==posts[i].id){
 				while(lenghtOverflow == 1){
+					strcat(newPosts[i].email,email);
 					printf("Digite o novo conteudo:\n");
 					setbuf(stdin,NULL);
-					scanf("%[^\n]s",&post.postContent);
+					scanf("%[^\n]s",&newPosts[i].postContent);
 					setbuf(stdin,NULL);
-					if(strlen(post.postContent)>1000){
+					newPosts[i].id = id;
+					if(strlen(newPosts[i].postContent)>1000){
 						printf("%s",POST_LENGHT_ERROR);
 						getch();
 						lenghtOverflow = 1;
@@ -83,15 +85,12 @@ int editPost(char* email,int id){
 						lenghtOverflow = 0;
 					}
 				}
-					fwrite(&post,sizeof(post),1,postFileAux);
 			}else{
-				fwrite(&post,sizeof(post),1,postFileAux);
+				newPosts[i] = posts[i];
 			}
 		}
-		fclose(postFile);
-		fclose(postFileAux);
-		remove(POSTS_FILE);
-		rename("postsaux.txt",POSTS_FILE);
+
+		posts = newPosts;
 	}else{
 		printf("%s",GET_POST_ERROR);
 		getch();
@@ -99,21 +98,17 @@ int editPost(char* email,int id){
 	}
 }
 int getPostsUser(char* email){
-	int id,action;
-	struct POST post;
-	FILE *postFile;
-	postFile = fopen(POSTS_FILE,"a+");
-	printf("Posts do usuario %s\n",post.email);
-	while(fread(&post,sizeof(post),1,postFile)!=0){
-            if(strcmp(email,post.email)== 0){
-				printf("\n  email:%s\n",post.email);
-				printf("  id:%i\n",post.id);
-				printf("  %s\n\n",post.postContent);
+	int id,action,i;
+	printf("Posts do usuario %s\n",email);
+	for(i=0;i<=POSITION_POST;i++){
+            if(strcmp(email,posts[i].email)== 0){
+				printf("\n  email:%s\n",posts[i].email);
+				printf("  id:%i\n",posts[i].id);
+				printf("  %s\n\n",posts[i].postContent);
             }
 	}
 	printf("\n Deseja fazer alguma acao?\nDeletar(0)\nEditar(1)\nSair(3)");
 	scanf("%i",&action);
-	fclose(postFile);
 	switch (action){
 	case 0:
 		printf(" Id do post:");
@@ -130,33 +125,28 @@ int getPostsUser(char* email){
 	}
 	return 0;
 }
-int getPosts(){
-	struct POST post;
-	FILE *postFile;
-	postFile = fopen(POSTS_FILE,"a+");
+int getPosts(struct POST *post){
+	int data;
 	printf("           Timeline\n-----------------------------\n");
-	while(fread(&post,sizeof(post),1,postFile)!=0){
-		printf("  %s@gmail.com:\n",post.email);
-		printf("     %s\n\n",post.postContent);
+	for(data=0; data<sizePost;data++){
+		if(strlen(post[data].email)!=0){
+			printf("  %s@gmail.com:\n",post[data].email);
+			printf("     %s\n\n",post[data].postContent);
+		}
 	}	
-	fclose(postFile);
 	return 0;
 }
 int deletePostsUser(char* email){
-	struct POST post;
-	FILE *postFile;
-	FILE *postFileAux;
-	postFile = fopen(POSTS_FILE,"a+");
-	postFileAux = fopen("postsaux.txt","a+");
+	struct POST *newPost;
 	system("cls");
-	while(fread(&post,sizeof(post),1,postFile)){
-		if(strcmp(email,post.email)!=0){
-			fwrite(&post,sizeof(post),1,postFileAux);
+	int i;
+	int j=0;
+	newPost = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
+	for(i=0;i<sizePost;i++){
+		if(strcmp(email,posts[i].email)!=0){
+			newPost[j] = posts[i];
 		}
 	}
-	fclose(postFile);
-	fclose(postFileAux);
-	remove(POSTS_FILE);
-	rename("postsaux.txt",POSTS_FILE);
+	posts = newPost;
 	return 0;
 }

@@ -1,50 +1,37 @@
 int postUserExists(char* email,int id){
-    struct POST post;
-	FILE *postFile;
-	postFile = fopen(POSTS_FILE,"a+");
 	system("cls");
-	while(fread(&post,sizeof(post),1,postFile)){
-		if(strcmp(email,post.email)==0 && id == post.id){
-			fclose(postFile);
+    int i;
+	for(i=0;i<POSITION_POST;i++){
+		if(strcmp(email,posts[i].email)==0 && id == posts[i].id){
             return 0;
 		}
 	}
-	fclose(postFile);
 	return 1;
 }
-int userExist(char* email, char* password){
-    FILE *usersFile;
-    usersFile = fopen(USERS_FILE,"a+");
-    struct USER user;
-        
-    while(fread(&user,sizeof(user),1,usersFile)!=0){
+int userExist(char* email, char* password,struct USER *user){
+    int i;
+    for(i=0;i< sizeUser;i++){
         if(strcmp(password,"")==0){
-            if(strcmp(email,user.email)== 0){
-                fclose(usersFile);
+            if(strcmp(email,user[i].email)== 0){
                 return 0;
             }
         }else{
-            if(strcmp(email,user.email)== 0 && strcmp(password,user.password) == 0){
-                fclose(usersFile);
+            if(strcmp(email,user[i].email)== 0 && strcmp(password,user[i].password) == 0){
                 return 0;
             }
         }
     }
-    fclose(usersFile);
-    
+   
     return 2;
 }
 int checkPostId(char* email){
-	int id;
+	int id,i;
 	id = 0;
 	struct POST post;
-	FILE *postFile;
-	postFile = fopen(POSTS_FILE,"a+");
-	while(fread(&post,sizeof(post),1,postFile)!=0){
-            if(strcmp(email,post.email)== 0 && id == post.id){
+	for(i=0;i<=POSITION_POST;i++){
+            if(strcmp(email,posts[i].email)== 0 && id == posts[i].id){
                 id++;
             }
 	}	
-	fclose(postFile);
 	return id;
 }
