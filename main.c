@@ -1,7 +1,36 @@
 #include "./includes/index.h"
 
-int login(struct USER *user){
+void initializeFiles(){
+    int data = 0;
+    users = (struct USER *)calloc(SIZE_USER,sizeof(struct USER));
+    posts = (struct POST *)malloc(SIZE_POST*sizeof(struct POST));
+    FILE *userFile;
     FILE *postFile;
+    userFile = fopen("users.txt","a+");
+    postFile = fopen("posts.txt","a+");
+    while(fread(&posts[data],sizeof(posts[data]),1,postFile)){
+        if(data >=SIZE_POST-1){
+            SIZE_POST = SIZE_POST*2;
+            posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
+            
+        }
+        POSITION_POST++;
+        data++;
+    }
+    data =0;
+    while(fread(&users[data],sizeof(users[data]),1,userFile)){
+        if(data >=-1){
+            SIZE_USER = SIZE_USER+2;
+            users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
+        }
+        POSITION++;
+        data++;
+    }
+    fclose(userFile);
+    fclose(postFile);
+}
+
+int login(struct USER *user){
     int task,data;
     char emailLog[50];
 	char passwordLog[16];
@@ -42,57 +71,26 @@ int login(struct USER *user){
             }
                     
         }
-        postFile = fopen(POSTS_FILE,"wb");
-        for(data=0;data<sizePost;data++){
-            fwrite(&posts[data],sizeof(posts[data]),1,postFile);
-        }
-        fclose(postFile);
+        
     }else{
         printf("%s",LOGIN_ERROR);
         getch();
     }
+    return 0;
 }
 
 int main(){
-    int data = 0;
-    users = (struct USER *)calloc(sizeUser,sizeof(struct USER));
-    posts = (struct POST *)malloc(sizePost*sizeof(struct POST));
-    FILE *userFile;
-    FILE *postFile;
-    userFile = fopen("users.txt","a+");
-    postFile = fopen("posts.txt","a+");
-    while(fread(&posts[data],sizeof(posts[data]),1,postFile)){
-        if(data >=sizePost-1){
-            sizePost = sizePost*2;
-            posts = (struct POST *)realloc(posts,sizePost*sizeof(struct POST));
-            
-        }
-        POSITION_POST++;
-        data++;
-    }
-    
-    data =0;
-    while(fread(&users[data],sizeof(users[data]),1,userFile)){
-        if(data >=sizeUser-1){
-            sizeUser = sizeUser+2;
-            users = (struct USER *)realloc(users,sizeUser*sizeof(struct USER));
-        }
-        POSITION++;
-        data++;
-    }
-    fclose(userFile);
-    fclose(postFile);
-    int password,Login;
+    initializeFiles();
+    int password,Login,data;
     //0 para login em email, e 1 para se registrar;
+        FILE *userFile;
+        FILE *postFile;
     for(;;){
-        system("pause");
         system("cls");
         getPosts(posts);
         printf(" Ja possui login?\nSim(0)\nNao(1)\nexit(2)\n");
         scanf("%i",&Login);
         system("cls");
-        FILE *userFile;
-        
         //login of user
         switch (Login){
             case 0:
@@ -103,10 +101,15 @@ int main(){
                 break;
             case 2:
                 userFile = fopen(USERS_FILE,"wb");
-                for(data=0;data<sizeUser;data++){
+                for(data=0;data<SIZE_USER;data++){
                     fwrite(&users[data],sizeof(users[data]),1,userFile);
                 }
                 fclose(userFile);
+                postFile = fopen(POSTS_FILE,"wb");
+                for(data=0;data<SIZE_POST;data++){
+                    fwrite(&posts[data],sizeof(posts[data]),1,postFile);
+                }
+                fclose(postFile);
                 return 0;
             
         }
