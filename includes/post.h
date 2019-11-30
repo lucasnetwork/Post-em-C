@@ -1,36 +1,21 @@
 int createPost(char* email){
 	struct POST postLog;
-	int moreAddPosts,lenghtOverflow;
-	int i,b;
-	b=0;
-	lenghtOverflow= 1;
+	int moreAddPosts;
 	moreAddPosts = 0;
 
 	strcat(postLog.email,email);
 	while(moreAddPosts ==0){
 		system("cls");
-		lenghtOverflow=1;
-		while(lenghtOverflow== 1){
-			printf("Escreva seu post: ");
-			setbuf(stdin,NULL);
-			scanf("%[^\n]s",&postLog.postContent);
-			setbuf(stdin,NULL);
-			if(strlen(postLog.postContent)>1000){
-				printf("%s",POST_LENGHT_ERROR);
-				lenghtOverflow= 1;
-			}else{
-				lenghtOverflow=0;
-			}
-		}
+		memmove(postLog.postContent,addValues(POST_LENGHT_ERROR,"","Escreva seu post: ",1000,0),sizeof(postLog.postContent));
 		postLog.id = checkPostId(email);
-			if(POSITION_POST >= sizePost-1){
-				sizePost = sizePost*2;
-				posts = (struct POST *)realloc(posts,sizePost*sizeof(struct POST));
-			}
-			posts[POSITION] = postLog;
+		if(POSITION_POST >= SIZE_POST-1){
+			SIZE_POST = SIZE_POST*2;
+			posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
+		}
+			posts[POSITION_POST] = postLog;
 			printf("%s",REGISTER_POST_SUCCESS);
 			system("pause");
-			POSITION++;
+			POSITION_POST++;
 		system("cls");
 		printf("Deseja criar mais um post?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddPosts);
@@ -70,21 +55,7 @@ int editPost(char* email,int id){
 		newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
 		for(i=0;i<=POSITION_POST;i++){
 			if(strcmp(email,posts[i].email)== 0 && id==posts[i].id){
-				while(lenghtOverflow == 1){
-					strcat(newPosts[i].email,email);
-					printf("Digite o novo conteudo:\n");
-					setbuf(stdin,NULL);
-					scanf("%[^\n]s",&newPosts[i].postContent);
-					setbuf(stdin,NULL);
-					newPosts[i].id = id;
-					if(strlen(newPosts[i].postContent)>1000){
-						printf("%s",POST_LENGHT_ERROR);
-						getch();
-						lenghtOverflow = 1;
-					}else{
-						lenghtOverflow = 0;
-					}
-				}
+				memmove(newPosts[i].postContent,addValues(POST_LENGHT_ERROR,"","Digite o novo conteudo: ",1000,0),sizeof(newPosts[i].postContent));
 			}else{
 				newPosts[i] = posts[i];
 			}
@@ -128,7 +99,7 @@ int getPostsUser(char* email){
 int getPosts(struct POST *post){
 	int data;
 	printf("           Timeline\n-----------------------------\n");
-	for(data=0; data<sizePost;data++){
+	for(data=0; data<POSITION_POST;data++){
 		if(strlen(post[data].email)!=0){
 			printf("  %s@gmail.com:\n",post[data].email);
 			printf("     %s\n\n",post[data].postContent);
@@ -142,9 +113,10 @@ int deletePostsUser(char* email){
 	int i;
 	int j=0;
 	newPost = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
-	for(i=0;i<sizePost;i++){
+	for(i=0;i<SIZE_POST;i++){
 		if(strcmp(email,posts[i].email)!=0){
 			newPost[j] = posts[i];
+			j++;
 		}
 	}
 	posts = newPost;

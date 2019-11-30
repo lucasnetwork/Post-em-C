@@ -1,40 +1,16 @@
 int getRegister(){
-	int moreAddUsers,lenghtOverflow;
+	int moreAddUsers;
 	char nullPassword[1] = ""; 
 	moreAddUsers = 0;
 	struct USER userLog;
 	while(moreAddUsers == 0){
 		system("cls");
-		lenghtOverflow= 1;
 		moreAddUsers = 0;
-		printf("digite seu email:");
-		while(lenghtOverflow== 1){
-			scanf("%s",userLog.email);
-			if(strlen(userLog.email)>50){
-				printf("%s",USER_EMAIL_LENGHT_ERROR);
-				lenghtOverflow= 1;
-			}else{
-				lenghtOverflow=0;
-			}
-		}
-		lenghtOverflow = 1;
-		while(lenghtOverflow== 1){
-			system("cls");
-			printf("digite sua senha:");
-			scanf("%s",userLog.password);
-			if(strlen(userLog.password)>16){
-				printf("%s",USER_PASSWORD_LENGHT_ERROR);
-				lenghtOverflow= 1;
-			}else if(strlen(userLog.password) < 8){
-				printf("%s",USER_PASSWORD_LENGHT_SMALL_ERROR);
-			}
-			else{
-				lenghtOverflow=0;
-			}
-		}
-			if(POSITION >= sizeUser-1){
-				sizeUser = sizeUser*2;
-				users = (struct USER *)realloc(users,sizeUser*sizeof(struct USER));
+		memmove(userLog.email,addValues(USER_EMAIL_LENGHT_ERROR,"","Digite o seu email:",50,0),sizeof(userLog.email));
+		memmove(userLog.password,addValues(USER_PASSWORD_LENGHT_ERROR,USER_PASSWORD_LENGHT_SMALL_ERROR,"Digite a sua senha:",16,8),sizeof(userLog.password));
+			if(POSITION >= SIZE_USER-1){
+				SIZE_USER = SIZE_USER*2;
+				users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
 			}
 			if(userExist(userLog.email,nullPassword,users)==0){
 					printf("%s",REGISTER_EMAIL_ERROR);
@@ -84,10 +60,8 @@ int editUser(char* email){
 	for(i=0;i<=POSITION;i++){
 		if(strcmp(email,users[i].email)==0){
 			while(j==0){
-				printf("Digite o novo email:");
-				scanf("%s",&newUsers[i].email);
-				printf("Digite a nova senha:");
-				scanf("%s",&newUsers[i].password);
+				memmove(newUsers[i].email,addValues(USER_EMAIL_LENGHT_ERROR,"","Digite o seu novo email:",50,0),sizeof(newUsers[i].email));
+				memmove(newUsers[i].password,addValues(USER_PASSWORD_LENGHT_ERROR,USER_PASSWORD_LENGHT_SMALL_ERROR,"Digite a sua nova senha:",16,8),sizeof(newUsers[i].password));
 				system("cls");
 				if(userExist(newUsers[i].email,"",users)==0){
 					printf("%s",REGISTER_EMAIL_ERROR);

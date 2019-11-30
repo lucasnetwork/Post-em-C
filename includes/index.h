@@ -23,8 +23,8 @@ struct USER *users;
     
 int POSITION = 0;
 int POSITION_POST = 0;
-int sizeUser = 1;
-int sizePost = 10;
+int SIZE_USER = 1;
+int SIZE_POST = 10;
 
 #include <string.h>
 #include <stddef.h>

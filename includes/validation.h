@@ -10,7 +10,7 @@ int postUserExists(char* email,int id){
 }
 int userExist(char* email, char* password,struct USER *user){
     int i;
-    for(i=0;i< sizeUser;i++){
+    for(i=0;i< SIZE_USER;i++){
         if(strcmp(password,"")==0){
             if(strcmp(email,user[i].email)== 0){
                 return 0;
@@ -34,4 +34,24 @@ int checkPostId(char* email){
             }
 	}	
 	return id;
+}
+char * addValues(char *textMaxError,char *textMinError,char *showText,int maxLenght,int minLenght){
+	char value[maxLenght];
+	int lenghtOverFlow = 1;
+	while(lenghtOverFlow== 1){
+		system("cls");
+		printf("%s",showText);
+        setbuf(stdin,NULL);
+		scanf("%[^\n]s",&value);
+        setbuf(stdin,NULL);
+		if(strlen(value)>maxLenght){
+			printf("%s",textMaxError);
+			lenghtOverFlow= 1;
+		}else if(strlen(value) < minLenght){
+			printf("%s",textMinError);
+		}else{
+			lenghtOverFlow=0;
+		}
+	}
+	return value;
 }
