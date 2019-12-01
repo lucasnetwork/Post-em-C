@@ -6,16 +6,19 @@ int createPost(char* email){
 	strcat(postLog.email,email);
 	while(moreAddPosts ==0){
 		system("cls");
-		memmove(postLog.postContent,addValues(POST_LENGHT_ERROR,"","Escreva seu post: ",1000,0),sizeof(postLog.postContent));
+
+		memmove(postLog.postContent,addValues(POST_LENGHT_ERROR,"",
+		"Escreva seu post: ",1000,0),sizeof(postLog.postContent));
+
 		postLog.id = checkPostId(email);
 		if(POSITION_POST >= SIZE_POST-1){
 			SIZE_POST = SIZE_POST*2;
 			posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
 		}
-			posts[POSITION_POST] = postLog;
-			printf("%s",REGISTER_POST_SUCCESS);
-			system("pause");
-			POSITION_POST++;
+		posts[POSITION_POST] = postLog;
+		POSITION_POST++;
+		printf("%s",REGISTER_POST_SUCCESS);
+		system("pause");
 		system("cls");
 		printf("Deseja criar mais um post?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddPosts);
@@ -23,20 +26,20 @@ int createPost(char* email){
 	return 0;
 }
 int deletePost(char* email, int id){
-	int i,j;
-	j=0;
+	int data,newData;
+	newData=0;
 	if(postUserExists(email,id)==0){
 		struct POST *newPosts;
 		newPosts = (struct POST *)malloc(POSITION_POST*sizeof(struct POST));
 		system("cls");
-		for(i=0;i<=POSITION_POST;i++){
-			if(strcmp(email,posts[i].email)!=0){
-				newPosts[j] = posts[i];
-				j++;
+		for(data=0;data<=POSITION_POST;data++){
+			if(strcmp(email,posts[data].email)!=0){
+				newPosts[newData] = posts[data];
+				newData++;
 			}
-			if(strcmp(email,posts[i].email)== 0 && id != posts[i].id){
-				newPosts[j] = posts[i];
-				j++;
+			if(strcmp(email,posts[data].email)== 0 && id != posts[data].id){
+				newPosts[newData] = posts[data];
+				newData++;
 			}
 		}
 		posts = newPosts;
@@ -48,16 +51,17 @@ int deletePost(char* email, int id){
 	}
 }
 int editPost(char* email,int id){
-	int i;
+	int data;
 	if(postUserExists(email,id)==0){
-		int lenghtOverflow = 1;
 		struct POST *newPosts;
 		newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
-		for(i=0;i<=POSITION_POST;i++){
-			if(strcmp(email,posts[i].email)== 0 && id==posts[i].id){
-				memmove(newPosts[i].postContent,addValues(POST_LENGHT_ERROR,"","Digite o novo conteudo: ",1000,0),sizeof(newPosts[i].postContent));
+		for(data=0;data<=POSITION_POST;data++){
+			if(strcmp(email,posts[data].email)== 0 && id==posts[data].id){
+				memmove(newPosts[data].postContent,addValues(POST_LENGHT_ERROR,"",
+				"Digite o novo conteudo: ",1000,0),sizeof(newPosts[data].postContent));
+
 			}else{
-				newPosts[i] = posts[i];
+				newPosts[data] = posts[data];
 			}
 		}
 
@@ -69,14 +73,14 @@ int editPost(char* email,int id){
 	}
 }
 int getPostsUser(char* email){
-	int id,action,i;
+	int id,action,data;
 	printf("Posts do usuario %s\n",email);
-	for(i=0;i<=POSITION_POST;i++){
-            if(strcmp(email,posts[i].email)== 0){
-				printf("\n  email:%s\n",posts[i].email);
-				printf("  id:%i\n",posts[i].id);
-				printf("  %s\n\n",posts[i].postContent);
-            }
+	for(data=0;data<=POSITION_POST;data++){
+        if(strcmp(email,posts[data].email)== 0){
+			printf("\n  email:%s\n",posts[data].email);
+			printf("  id:%i\n",posts[data].id);
+			printf("  %s\n\n",posts[data].postContent);
+        }
 	}
 	printf("\n Deseja fazer alguma acao?\nDeletar(0)\nEditar(1)\nSair(3)");
 	scanf("%i",&action);
@@ -110,15 +114,30 @@ int getPosts(struct POST *post){
 int deletePostsUser(char* email){
 	struct POST *newPost;
 	system("cls");
-	int i;
-	int j=0;
+	int data;
+	int newData=0;
 	newPost = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
-	for(i=0;i<SIZE_POST;i++){
-		if(strcmp(email,posts[i].email)!=0){
-			newPost[j] = posts[i];
-			j++;
+	for(data=0;data<SIZE_POST;data++){
+		if(strcmp(email,posts[data].email)!=0){
+			newPost[newData] = posts[data];
+			newData++;
 		}
 	}
 	posts = newPost;
+	return 0;
+}
+int renamePostsUser(char* email,char* newEmail){
+	struct POST *newPosts;
+	int data;
+	newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
+	for(data = 0;data<POSITION_POST;data++){
+		if(strcmp(email,posts[data].email)==0){
+			newPosts[data] = posts[data];
+			memmove(newPosts[data].email,newEmail,sizeof(email));
+		}else{
+			newPosts[data] = posts[data];
+		}
+	}
+	posts = newPosts;
 	return 0;
 }
