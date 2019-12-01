@@ -6,28 +6,33 @@ void initializeFiles(){
     posts = (struct POST *)malloc(SIZE_POST*sizeof(struct POST));
     FILE *userFile;
     FILE *postFile;
-    userFile = fopen("users.txt","a+");
-    postFile = fopen("posts.txt","a+");
-    while(fread(&posts[data],sizeof(posts[data]),1,postFile)){
-        if(data >=SIZE_POST-1){
-            SIZE_POST = SIZE_POST*2;
-            posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
-            
+    userFile = fopen("users.txt","rb");
+    postFile = fopen("posts.txt","rb");
+    if(postFile != NULL){
+        while(fread(&posts[data],sizeof(posts[data]),1,postFile)){
+            if(data >=SIZE_POST-1){
+                SIZE_POST = SIZE_POST*2;
+                posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
+                
+            }
+            POSITION_POST++;
+            data++;
         }
-        POSITION_POST++;
-        data++;
+        fclose(postFile);
     }
     data =0;
-    while(fread(&users[data],sizeof(users[data]),1,userFile)){
-        if(data >=-1){
-            SIZE_USER = SIZE_USER+2;
-            users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
+    if(userFile !=NULL){
+        while(fread(&users[data],sizeof(users[data]),1,userFile)){
+            if(data >=-1){
+                SIZE_USER = SIZE_USER+2;
+                users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
+            }
+            POSITION++;
+            data++;
         }
-        POSITION++;
-        data++;
+        fclose(userFile);
     }
-    fclose(userFile);
-    fclose(postFile);
+    
 }
 
 int login(struct USER *user){

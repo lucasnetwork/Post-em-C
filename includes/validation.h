@@ -36,6 +36,11 @@ int checkPostId(char* email){
 	return id;
 }
 char * addValues(char *textMaxError,char *textMinError,char *showText,int maxLenght,int minLenght){
+	/*
+		A função será usada para adicionar uma string a uma variavel,
+		verificando se tamanho da string condiz com o desejavel,
+		no final, a função retornará uma string;
+	*/
 	char value[maxLenght];
 	int lenghtOverFlow = 1;
 	while(lenghtOverFlow== 1){
