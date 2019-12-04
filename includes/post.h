@@ -100,7 +100,7 @@ int getPostsUser(char* email){
 	}
 	return 0;
 }
-int getPosts(struct POST *post){
+int getPosts(struct POST *post){ 
 	int data;
 	printf("           Timeline\n-----------------------------\n");
 	for(data=0; data<POSITION_POST;data++){

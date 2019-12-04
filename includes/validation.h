@@ -9,19 +9,21 @@ int postUserExists(char* email,int id){
 	return 1;
 }
 int userExist(char* email, char* password,struct USER *user){
+	/*
+		Essa função serve tanto para verificar se o usuario
+		já está cadastrado, quanto para ve se o usuario e 
+		senha digitados estao certos;
+		se senha = "", significa que é um registro de usuario;
+		se senha != "", significa que é um login de usuario;
+	*/
     int i;
     for(i=0;i< SIZE_USER;i++){
-        if(strcmp(password,"")==0){
-            if(strcmp(email,user[i].email)== 0){
+        if(strcmp(password,"")==0 && strcmp(email,user[i].email)== 0){
                 return 0;
-            }
-        }else{
-            if(strcmp(email,user[i].email)== 0 && strcmp(password,user[i].password) == 0){
+        }else if(strcmp(email,user[i].email)== 0 && strcmp(password,user[i].password) == 0){
                 return 0;
             }
         }
-    }
-   
     return 2;
 }
 int checkPostId(char* email){

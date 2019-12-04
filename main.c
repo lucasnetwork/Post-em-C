@@ -1,6 +1,10 @@
 #include "./includes/index.h"
 
 void initializeFiles(){
+    /*
+        Essa função inicializará todos os dados de um arquivo, se existirem,
+        para um vetor, alocando mais memoria ao vetor se precisar;
+    */
     int data = 0;
     users = (struct USER *)calloc(SIZE_USER,sizeof(struct USER));
     posts = (struct POST *)malloc(SIZE_POST*sizeof(struct POST));
@@ -13,7 +17,6 @@ void initializeFiles(){
             if(data >=SIZE_POST-1){
                 SIZE_POST = SIZE_POST*2;
                 posts = (struct POST *)realloc(posts,SIZE_POST*sizeof(struct POST));
-                
             }
             POSITION_POST++;
             data++;
@@ -23,7 +26,7 @@ void initializeFiles(){
     data =0;
     if(userFile !=NULL){
         while(fread(&users[data],sizeof(users[data]),1,userFile)){
-            if(data >=-1){
+            if(data >=SIZE_USER-1){
                 SIZE_USER = SIZE_USER+2;
                 users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
             }

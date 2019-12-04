@@ -1,4 +1,4 @@
-#define REGISTER_EMAIL_ERROR "Email já existe\n"
+#define REGISTER_EMAIL_ERROR "Email ja existe\n"
 #define REGISTER_USER_SUCCESS "Cadastro feito com sucesso\n"
 #define REGISTER_POST_SUCCESS "post cadastrado com sucesso\n"
 #define LOGIN_ERROR "Email ou senha incorretos,tente novamente\n"

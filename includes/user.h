@@ -17,15 +17,15 @@ int getRegister(){
 				users = (struct USER *)realloc(users,SIZE_USER*sizeof(struct USER));
 			}
 			if(userExist(userLog.email,nullPassword,users)==0){
-					printf("%s",REGISTER_EMAIL_ERROR);
-					system("pause");
+				printf("%s",REGISTER_EMAIL_ERROR);
+				system("pause");
 			}else{
-					printf("indice:%i\n",POSITION);
-					printf("valor:%s",users[POSITION].email);
-					users[POSITION] = userLog;
-					printf("%s",REGISTER_USER_SUCCESS);
-					system("pause");
-				}	
+				printf("indice:%i\n",POSITION);
+				printf("valor:%s",users[POSITION].email);
+				users[POSITION] = userLog;
+				printf("%s",REGISTER_USER_SUCCESS);
+				system("pause");
+			}	
 			POSITION++;
 			
 		system("cls");
