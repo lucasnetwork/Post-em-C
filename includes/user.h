@@ -20,7 +20,6 @@ int getRegister(){
 				printf("%s",REGISTER_EMAIL_ERROR);
 				system("pause");
 			}else{
-				printf("indice:%i\n",POSITION);
 				printf("valor:%s",users[POSITION].email);
 				users[POSITION] = userLog;
 				printf("%s",REGISTER_USER_SUCCESS);
@@ -32,7 +31,6 @@ int getRegister(){
 		printf("deseja criar outro contato?\nSim(0)\nNao(1)\n");
 		scanf("%i",&moreAddUsers);
 		}
-		
 	return 0;
 }
 int deleteUser(char* email){
@@ -49,6 +47,7 @@ int deleteUser(char* email){
 				deletePostsUser(email);
 			}
 	}
+	free(users);
 	users = newUsers;
 	return 0;
 }
@@ -83,6 +82,7 @@ int editUser(char* email){
 			newUsers[data]=users[data];
 		}
 	}
+	free(users);
 	users = newUsers;
 	return 0;
 }

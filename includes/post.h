@@ -25,9 +25,11 @@ int createPost(char* email){
 	}
 	return 0;
 }
-int deletePost(char* email, int id){
-	int data,newData;
+int deletePost(char* email){
+	int data,newData,id;
 	newData=0;
+	printf(" Id do post:");
+	scanf("%i",&id);
 	if(postUserExists(email,id)==0){
 		struct POST *newPosts;
 		newPosts = (struct POST *)malloc(POSITION_POST*sizeof(struct POST));
@@ -42,6 +44,7 @@ int deletePost(char* email, int id){
 				newData++;
 			}
 		}
+		free(posts);
 		posts = newPosts;
 		return 0;
 	}else{
@@ -50,8 +53,11 @@ int deletePost(char* email, int id){
 		return 1;
 	}
 }
-int editPost(char* email,int id){
+int editPost(char* email){
 	int data;
+	int id;
+	printf(" Id do post:");
+	scanf("%i",&id);
 	if(postUserExists(email,id)==0){
 		struct POST *newPosts;
 		newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
@@ -64,7 +70,7 @@ int editPost(char* email,int id){
 				newPosts[data] = posts[data];
 			}
 		}
-
+		free(posts);
 		posts = newPosts;
 	}else{
 		printf("%s",GET_POST_ERROR);
@@ -73,7 +79,7 @@ int editPost(char* email,int id){
 	}
 }
 int getPostsUser(char* email){
-	int id,action,data;
+	int id,data;
 	printf("Posts do usuario %s\n",email);
 	for(data=0;data<=POSITION_POST;data++){
         if(strcmp(email,posts[data].email)== 0){
@@ -82,22 +88,9 @@ int getPostsUser(char* email){
 			printf("  %s\n\n",posts[data].postContent);
         }
 	}
-	printf("\n Deseja fazer alguma acao?\nDeletar(0)\nEditar(1)\nSair(3)");
-	scanf("%i",&action);
-	switch (action){
-	case 0:
-		printf(" Id do post:");
-		scanf(" %i",&id);
-		deletePost(email,id);
-		break;
-	case 1:
-		printf(" Id do post:");
-		scanf(" %i",&id);
-		editPost(email,id);
-		break;
-	default:
-		break;
-	}
+	printf("\n Deseja fazer alguma acao?\nDeletar(0)\nEditar(1)\nSair(2)");
+	int (*functions[2])() = {deletePost,editPost};
+	switchs(functions,2,email);
 	return 0;
 }
 int getPosts(struct POST *post){ 
@@ -123,6 +116,7 @@ int deletePostsUser(char* email){
 			newData++;
 		}
 	}
+	free(posts);
 	posts = newPost;
 	return 0;
 }
@@ -138,6 +132,7 @@ int renamePostsUser(char* email,char* newEmail){
 			newPosts[data] = posts[data];
 		}
 	}
+	free(posts);
 	posts = newPosts;
 	return 0;
 }
