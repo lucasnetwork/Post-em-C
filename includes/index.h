@@ -28,7 +28,6 @@ int SIZE_POST = 10;
 
 #include <string.h>
 #include <stddef.h>
-#include <locale.h>
 #include <conio.h>
 #include "constants.h"
 #include "validation.h"
