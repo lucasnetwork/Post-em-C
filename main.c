@@ -7,7 +7,6 @@ int switchs(int(*(*functions))(),int maxlengh,char *email){
     if(i < maxlengh){
         system("cls");
         (**(functions+i))(email);
-        return 0;
     }else if(i==maxlengh){
         task=3;
         return task;

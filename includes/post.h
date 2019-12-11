@@ -32,14 +32,13 @@ int deletePost(char* email){
 	scanf("%i",&id);
 	if(postUserExists(email,id)==0){
 		struct POST *newPosts;
-		newPosts = (struct POST *)malloc(POSITION_POST*sizeof(struct POST));
+		newPosts = (struct POST *)malloc(SIZE_POST*sizeof(struct POST));
 		system("cls");
-		for(data=0;data<=POSITION_POST;data++){
+		for(data=0;data<POSITION_POST;data++){
 			if(strcmp(email,posts[data].email)!=0){
 				newPosts[newData] = posts[data];
 				newData++;
-			}
-			if(strcmp(email,posts[data].email)== 0 && id != posts[data].id){
+			}else if(strcmp(email,posts[data].email)== 0 && id != posts[data].id){
 				newPosts[newData] = posts[data];
 				newData++;
 			}
@@ -59,23 +58,16 @@ int editPost(char* email){
 	printf(" Id do post:");
 	scanf("%i",&id);
 	if(postUserExists(email,id)==0){
-		struct POST *newPosts;
-		newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
-		for(data=0;data<=POSITION_POST;data++){
+		for(data=0;data<POSITION_POST;data++){
 			if(strcmp(email,posts[data].email)== 0 && id==posts[data].id){
-				memmove(newPosts[data].postContent,addValues(POST_LENGHT_ERROR,"",
-				"Digite o novo conteudo: ",1000,0),sizeof(newPosts[data].postContent));
-
-			}else{
-				newPosts[data] = posts[data];
+				memmove(posts[data].postContent,addValues(POST_LENGHT_ERROR,"",
+				"Digite o novo conteudo: ",1000,0),sizeof(posts[data].postContent));
 			}
 		}
-		free(posts);
-		posts = newPosts;
 	}else{
 		printf("%s",GET_POST_ERROR);
 		getch();
-		return 1;
+		return 0;
 	}
 }
 int getPostsUser(char* email){
@@ -109,8 +101,8 @@ int deletePostsUser(char* email){
 	system("cls");
 	int data;
 	int newData=0;
-	newPost = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
-	for(data=0;data<SIZE_POST;data++){
+	newPost = (struct POST *)malloc((SIZE_POST)*sizeof(struct POST));
+	for(data=0;data<POSITION_POST;data++){
 		if(strcmp(email,posts[data].email)!=0){
 			newPost[newData] = posts[data];
 			newData++;
@@ -121,18 +113,11 @@ int deletePostsUser(char* email){
 	return 0;
 }
 int renamePostsUser(char* email,char* newEmail){
-	struct POST *newPosts;
 	int data;
-	newPosts = (struct POST *)malloc((POSITION_POST+1)*sizeof(struct POST));
 	for(data = 0;data<POSITION_POST;data++){
 		if(strcmp(email,posts[data].email)==0){
-			newPosts[data] = posts[data];
-			memmove(newPosts[data].email,newEmail,sizeof(email));
-		}else{
-			newPosts[data] = posts[data];
+			memmove(posts[data].email,newEmail,sizeof(email));
 		}
 	}
-	free(posts);
-	posts = newPosts;
 	return 0;
 }

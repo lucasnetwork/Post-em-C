@@ -20,7 +20,6 @@ int getRegister(){
 				printf("%s",REGISTER_EMAIL_ERROR);
 				system("pause");
 			}else{
-				printf("valor:%s",users[POSITION].email);
 				users[POSITION] = userLog;
 				printf("%s",REGISTER_USER_SUCCESS);
 				system("pause");
@@ -35,10 +34,10 @@ int getRegister(){
 }
 int deleteUser(char* email){
 	struct USER *newUsers;
-	newUsers = (struct USER *)malloc(POSITION*sizeof(struct USER));
+	newUsers = (struct USER *)malloc(SIZE_USER*sizeof(struct USER));
 	int data,newData;
 	newData=0;
-	for(data=0;data<=POSITION;data++){
+	for(data=0;data<POSITION;data++){
             if(strcmp(email,users[data].email)!= 0){
 				newUsers[newData] = users[data];
 				newData++;
@@ -54,8 +53,7 @@ int deleteUser(char* email){
 int editUser(char* email){
 	int data,emailExist;
 	emailExist=0;
-	struct USER *newUsers;
-	newUsers = (struct USER *)malloc((POSITION+1) * sizeof(struct USER));
+	struct USER newUsers;
 	/*
 		O for abaixo verificara se o email existe. se existe ele vai pedir o novo email e a nova senha,
 		se o email verificado não for igual ao pedido, ele será escrito na nova struct;
@@ -63,26 +61,23 @@ int editUser(char* email){
 	for(data=0;data<=POSITION;data++){
 		if(strcmp(email,users[data].email)==0){
 			while(emailExist==0){
-				memmove(newUsers[data].email,addValues(USER_EMAIL_LENGHT_ERROR,"",
-				"Digite o seu novo email:",50,0),sizeof(newUsers[data].email));
+				memmove(newUsers.email,addValues(USER_EMAIL_LENGHT_ERROR,"",
+				"Digite o seu novo email:",50,0),sizeof(newUsers.email));
 				
-				memmove(newUsers[data].password,addValues(USER_PASSWORD_LENGHT_ERROR,USER_PASSWORD_LENGHT_SMALL_ERROR,
-				"Digite a sua nova senha:",16,8),sizeof(newUsers[data].password));
+				memmove(newUsers.password,addValues(USER_PASSWORD_LENGHT_ERROR,USER_PASSWORD_LENGHT_SMALL_ERROR,
+				"Digite a sua nova senha:",16,8),sizeof(newUsers.password));
 
 				system("cls");
-				if(userExist(newUsers[data].email,"",users)==0){
+				if(userExist(newUsers.email,"",users)==0){
 					printf("%s",REGISTER_EMAIL_ERROR);
 					getch();
 				}else{
+					renamePostsUser(users[data].email,newUsers.email);
+					users[data] = newUsers;
 					emailExist=1;
 				}
-				renamePostsUser(users[data].email,newUsers[data].email);
 			}
-		}else{
-			newUsers[data]=users[data];
 		}
 	}
-	free(users);
-	users = newUsers;
 	return 0;
 }

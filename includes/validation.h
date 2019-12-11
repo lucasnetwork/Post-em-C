@@ -60,5 +60,5 @@ char * addValues(char *textMaxError,char *textMinError,char *showText,int maxLen
 			lenghtOverFlow=0;
 		}
 	}
-	return value;
+	return &value;
 }
